@@ -1,32 +1,56 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../data/doi_repository.dart';
+import '../../../domain/doi_record.dart';
+import '../../../domain/i_doi_repository.dart';
 import 'doi_list_state.dart';
 
-/// Загружает каталог и держит поисковый запрос экрана списка.
 class DoiListCubit extends Cubit<DoiListState> {
-  DoiListCubit(this._repository) : super(const DoiListState());
+  DoiListCubit(this._repository) : super(const DoiListLoading(''));
 
-  final DoiRepository _repository;
+  final IDoiRepository _repository;
+  List<DoiRecord> _catalog = const [];
+  int _loadId = 0;
 
   Future<void> load() async {
-    emit(state.copyWith(status: DoiListStatus.loading, error: null));
+    final loadId = ++_loadId;
+    emit(DoiListLoading(state.query));
     try {
       final records = await _repository.getDois();
-      emit(state.copyWith(status: DoiListStatus.loaded, records: records));
-    } on Exception catch (e) {
-      emit(
-        state.copyWith(
-          status: DoiListStatus.error,
-          error: e.toString(),
-        ),
-      );
+      if (isClosed || loadId != _loadId) return;
+      _catalog = records;
+      _showResults(state.query);
+    } on Exception {
+      if (isClosed || loadId != _loadId) return;
+      emit(DoiListError(state.query));
     }
   }
 
-  /// Обновляет поисковый запрос; фильтрация — синхронная по уже
-  /// загруженному каталогу.
-  void search(String query) => emit(state.copyWith(query: query));
+  void search(String query) {
+    switch (state) {
+      case DoiListLoading():
+        emit(DoiListLoading(query));
+      case DoiListError():
+        emit(DoiListError(query));
+      case DoiListLoaded() || DoiListNotFound():
+        _showResults(query);
+    }
+  }
 
-  void resetSearch() => emit(state.copyWith(query: ''));
+  void _showResults(String query) {
+    final term = query.trim().toLowerCase();
+    final matches = term.isEmpty
+        ? _catalog
+        : _catalog
+              .where(
+                (record) =>
+                    record.title.toLowerCase().contains(term) ||
+                    record.doi.toLowerCase().contains(term),
+              )
+              .toList();
+    emit(
+      matches.isEmpty
+          ? DoiListNotFound(query)
+          : DoiListLoaded(query, matches, _catalog.length),
+    );
+  }
 }

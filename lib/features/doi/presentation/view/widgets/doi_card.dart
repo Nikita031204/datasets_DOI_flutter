@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 
 import '../../../../../common/theme/app_colors.dart';
 import '../../../../../common/widgets/label_chip.dart';
+import '../../../../../common/theme/image_sources.dart';
+import '../../../../../l10n/app_localizations.dart';
 import '../../../domain/doi_record.dart';
+import '../../utils/doi_display.dart';
 import 'resource_type_chip.dart';
 
 /// Карточка записи в каталоге: иконка типа, заголовок, авторы,
@@ -15,8 +18,9 @@ class DoiCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
-    final outline = theme.colorScheme.outline;
+    final outline = theme.colorScheme.onSurfaceVariant;
 
     return Card(
       child: InkWell(
@@ -30,7 +34,7 @@ class DoiCard extends StatelessWidget {
               Hero(
                 tag: 'doi-icon-${record.doi}',
                 child: Material(
-                  color: Colors.transparent,
+                  color: AppColors.transparent,
                   child: Container(
                     width: 52,
                     height: 52,
@@ -40,7 +44,7 @@ class DoiCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(14),
                     ),
                     child: Icon(
-                      AppColors.resourceTypeIcon(record.resourceTypeGeneral),
+                      ImageSources.doiPlaceholder(record.resourceTypeGeneral),
                       color: AppColors.resourceType(record.resourceTypeGeneral),
                     ),
                   ),
@@ -55,16 +59,20 @@ class DoiCard extends StatelessWidget {
                       record.title,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                      style: theme.textTheme.titleSmall
-                          ?.copyWith(fontWeight: FontWeight.w700),
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      record.authorsLine,
+                      record.creators.isEmpty
+                          ? l10n.unknownAuthor
+                          : record.authorsLine,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: theme.textTheme.bodySmall
-                          ?.copyWith(color: outline),
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: outline,
+                      ),
                     ),
                     const SizedBox(height: 2),
                     Text(
@@ -75,8 +83,9 @@ class DoiCard extends StatelessWidget {
                       ].join(' • '),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: theme.textTheme.bodySmall
-                          ?.copyWith(color: outline),
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: outline,
+                      ),
                     ),
                     const SizedBox(height: 10),
                     Wrap(
@@ -91,7 +100,7 @@ class DoiCard extends StatelessWidget {
                           ),
                         if (record.citationCount > 0)
                           LabelChip(
-                            label: 'цитирований: ${record.citationCount}',
+                            label: l10n.citationCount(record.citationCount),
                             color: theme.colorScheme.primary,
                             icon: Icons.format_quote_outlined,
                           ),

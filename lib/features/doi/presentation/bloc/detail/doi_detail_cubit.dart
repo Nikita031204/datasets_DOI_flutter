@@ -1,26 +1,27 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../data/doi_repository.dart';
+import '../../../domain/i_doi_repository.dart';
 import 'doi_detail_state.dart';
 
-/// Загружает одну запись по DOI из пути `/doi/<doi>`.
 class DoiDetailCubit extends Cubit<DoiDetailState> {
-  DoiDetailCubit(this._repository, this.doi) : super(const DoiDetailState()) {
-    load();
-  }
+  DoiDetailCubit(this._repository, this.doi) : super(const DoiDetailLoading());
 
-  final DoiRepository _repository;
+  final IDoiRepository _repository;
   final String doi;
+  int _loadId = 0;
 
   Future<void> load() async {
-    emit(const DoiDetailState(status: DoiDetailStatus.loading));
+    final loadId = ++_loadId;
+    emit(const DoiDetailLoading());
     try {
       final record = await _repository.getByDoi(doi);
-      emit(DoiDetailState(status: DoiDetailStatus.loaded, record: record));
-    } on DoiNotFoundException {
-      emit(DoiDetailState(status: DoiDetailStatus.notFound, error: doi));
-    } on Exception catch (e) {
-      emit(DoiDetailState(status: DoiDetailStatus.error, error: e.toString()));
+      if (isClosed || loadId != _loadId) return;
+      emit(
+        record == null ? const DoiDetailNotFound() : DoiDetailLoaded(record),
+      );
+    } on Exception {
+      if (isClosed || loadId != _loadId) return;
+      emit(const DoiDetailError());
     }
   }
 }

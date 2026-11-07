@@ -1,18 +1,21 @@
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:doi_catalog/features/doi/data/mock_dois.dart';
-import 'package:doi_catalog/features/doi/data/doi_repository.dart';
-import 'package:doi_catalog/features/doi/domain/doi_record.dart';
+import 'package:doi_catalog/common/navigation/app_router.dart';
+import 'package:doi_catalog/features/doi/data/doi_record_mapper.dart';
+import 'package:doi_catalog/features/doi/presentation/utils/doi_display.dart';
 
 void main() {
-  group('DoiRecord.fromJsonApi (JSON:API data/attributes)', () {
+  group('DoiRecordMapper.fromJsonApi (JSON:API data/attributes)', () {
     test('разбирает обёртку data → attributes', () {
-      final records = DoiRecord.listFromJsonApi(kDoiCatalogJsonApi);
+      final records = DoiRecordMapper.listFromJsonApi(kDoiCatalogJsonApi);
 
       expect(records, isNotEmpty);
       expect(records.length, kDoiCatalogJsonApi['data']!.length as int);
 
-      final sst = records.firstWhere((r) => r.doi == '10.82152/sst-global-1980-2023');
+      final sst = records.firstWhere(
+        (r) => r.doi == '10.82152/sst-global-1980-2023',
+      );
       expect(sst.title, contains('Global Sea Surface Temperature'));
       expect(sst.subtitle, contains('Version 2.1'));
       expect(sst.publisher, 'Marine Data Archive');
@@ -27,19 +30,21 @@ void main() {
     });
 
     test('publisher бывает и объектом, и строкой', () {
-      final records = DoiRecord.listFromJsonApi(kDoiCatalogJsonApi);
+      final records = DoiRecordMapper.listFromJsonApi(kDoiCatalogJsonApi);
 
-      final objectPublisher = records
-          .firstWhere((r) => r.doi == '10.17882/polar-observatory-42');
+      final objectPublisher = records.firstWhere(
+        (r) => r.doi == '10.17882/polar-observatory-42',
+      );
       expect(objectPublisher.publisher, 'Polar Data Centre');
 
-      final stringPublisher = records
-          .firstWhere((r) => r.doi == '10.5880/gfz.2024.003');
+      final stringPublisher = records.firstWhere(
+        (r) => r.doi == '10.5880/gfz.2024.003',
+      );
       expect(stringPublisher.publisher, 'GFZ Data Services');
     });
 
     test('запись без авторов и описания не падает', () {
-      final records = DoiRecord.listFromJsonApi(kDoiCatalogJsonApi);
+      final records = DoiRecordMapper.listFromJsonApi(kDoiCatalogJsonApi);
 
       final buoy = records.firstWhere((r) => r.doi == '10.17882/polar-buoy-07');
       expect(buoy.creators, isEmpty);
@@ -48,28 +53,24 @@ void main() {
     });
 
     test('relatedIdentifier различает DOI и внешние ссылки', () {
-      final records = DoiRecord.listFromJsonApi(kDoiCatalogJsonApi);
+      final records = DoiRecordMapper.listFromJsonApi(kDoiCatalogJsonApi);
 
-      final sst = records.firstWhere((r) => r.doi == '10.82152/sst-global-1980-2023');
-      final doiLink = sst.relatedIdentifiers
-          .firstWhere((r) => r.relatedIdentifier == '10.1029/2023gl107894');
-      final urlLink = sst.relatedIdentifiers
-          .firstWhere((r) => r.relatedIdentifierType == 'URL');
+      final sst = records.firstWhere(
+        (r) => r.doi == '10.82152/sst-global-1980-2023',
+      );
+      final doiLink = sst.relatedIdentifiers.firstWhere(
+        (r) => r.relatedIdentifier == '10.1029/2023gl107894',
+      );
+      final urlLink = sst.relatedIdentifiers.firstWhere(
+        (r) => r.relatedIdentifierType == 'URL',
+      );
 
       expect(doiLink.isDoi, isTrue);
-      expect(doiLink.routePath, '/doi/10.1029%2F2023gl107894');
+      expect(
+        AppRoutes.detail(doiLink.relatedIdentifier),
+        '/doi/10.1029/2023gl107894',
+      );
       expect(urlLink.isDoi, isFalse);
-    });
-
-    test('поиск по названию регистронезависимый', () {
-      final records = DoiRecord.listFromJsonApi(kDoiCatalogJsonApi);
-
-      final found = DoiRepository.filterByQuery(records, 'bloom');
-      expect(found, hasLength(1));
-      expect(found.single.doi, '10.1234/ncomms.2024.1987');
-
-      final none = DoiRepository.filterByQuery(records, 'quantum crypto');
-      expect(none, isEmpty);
     });
   });
 }

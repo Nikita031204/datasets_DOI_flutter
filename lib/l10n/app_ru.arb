@@ -1,0 +1,152 @@
+{
+  "@@locale": "ru",
+  "catalogTitle": "Каталог DOI",
+  "refresh": "Обновить",
+  "searchHint": "Поиск по названию или DOI…",
+  "clearSearch": "Очистить поиск",
+  "catalogCount": "Записей в каталоге: {count}",
+  "@catalogCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "searchCount": "Найдено: {count} из {total}",
+  "@searchCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "catalogLoadError": "Не удалось загрузить каталог",
+  "detailLoadError": "Не удалось загрузить запись",
+  "retry": "Повторить",
+  "noSearchResults": "По запросу «{query}» ничего не найдено",
+  "@noSearchResults": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "emptyCatalog": "В каталоге пока нет записей",
+  "tryAnotherQuery": "Попробуйте другое название или DOI",
+  "copyDoi": "Скопировать DOI",
+  "doiCopied": "DOI скопирован: {doi}",
+  "@doiCopied": {
+    "placeholders": {
+      "doi": {
+        "type": "String"
+      }
+    }
+  },
+  "metadataState": "Статус: {state}",
+  "@metadataState": {
+    "placeholders": {
+      "state": {
+        "type": "String"
+      }
+    }
+  },
+  "versionLabel": "Версия {version}",
+  "@versionLabel": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "doiLabel": "DOI",
+  "publisher": "Издатель",
+  "publicationYear": "Год публикации",
+  "authors": "Авторы",
+  "unknownAuthor": "Автор не указан",
+  "recordLanguage": "Язык",
+  "publication": "Публикация",
+  "volumeLabel": "т. {volume}",
+  "@volumeLabel": {
+    "placeholders": {
+      "volume": {
+        "type": "String"
+      }
+    }
+  },
+  "issueLabel": "№ {issue}",
+  "@issueLabel": {
+    "placeholders": {
+      "issue": {
+        "type": "String"
+      }
+    }
+  },
+  "size": "Размер",
+  "formats": "Форматы",
+  "urlLabel": "URL",
+  "citationCount": "цитирований: {count}",
+  "@citationCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "citations": "Цитирований",
+  "views": "Просмотров",
+  "downloads": "Скачиваний",
+  "abstractTitle": "Аннотация",
+  "people": "Люди",
+  "subjects": "Тематика",
+  "notes": "Примечания",
+  "licenses": "Лицензии",
+  "dates": "Даты",
+  "dateLabel": "Дата",
+  "registered": "Зарегистрирован",
+  "updated": "Обновлён",
+  "relatedRecords": "Связанные записи ({count})",
+  "@relatedRecords": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "externalResource": "Тип: {type} (внешний ресурс)",
+  "@externalResource": {
+    "placeholders": {
+      "type": {
+        "type": "String"
+      }
+    }
+  },
+  "missingRecord": "Записи нет в каталоге",
+  "backToCatalog": "К каталогу",
+  "pageNotFound": "Страница не найдена",
+  "otherType": "Другое",
+  "useLightTheme": "Включить светлую тему",
+  "useDarkTheme": "Включить тёмную тему",
+  "chooseLanguage": "Выбрать язык",
+  "russian": "Русский",
+  "english": "Английский",
+  "relationReferences": "Ссылается на",
+  "relationIsReferencedBy": "На неё ссылаются",
+  "relationCites": "Цитирует",
+  "relationIsCitedBy": "Цитируется в",
+  "relationIsSupplementTo": "Дополнение к",
+  "relationIsSupplementedBy": "Дополнено записью",
+  "relationIsDerivedFrom": "Получено из",
+  "relationIsSourceOf": "Источник для",
+  "relationHasPart": "Содержит часть",
+  "relationIsPartOf": "Часть записи",
+  "relationIsVariantFormOf": "Вариант формы",
+  "relationIsIdenticalTo": "Идентична",
+  "relationRequires": "Требует",
+  "relationIsRequiredBy": "Требуется для",
+  "relationCompiles": "Компилирует",
+  "relationIsCompiledBy": "Скомпилировано из",
+  "relationDefault": "Связана"
+}

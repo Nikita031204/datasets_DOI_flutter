@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 /// Палитра приложения: «научный» глубокий петроль + янтарный акцент.
 /// Нарочно другая по сравнению с референсным покедексом.
 abstract final class AppColors {
+  static const transparent = Colors.transparent;
+
   // Фирменные цвета.
   static const Color petrol = Color(0xFF0B5C63);
   static const Color petrolDeep = Color(0xFF084349);
@@ -25,29 +27,19 @@ abstract final class AppColors {
 
   /// Цвет чипа для крупной категории ресурса DataCite.
   static Color resourceType(String? typeGeneral) => switch (typeGeneral) {
-        'Dataset' => petrol,
-        'JournalArticle' => oceanBlue,
-        'Software' => const Color(0xFF7C5CBF),
-        'Preprint' => amber,
-        'PhysicalObject' => const Color(0xFF5B8C5A),
-        _ => const Color(0xFF607D8B),
-      };
-
-  /// Иконка для крупной категории ресурса DataCite.
-  static IconData resourceTypeIcon(String? typeGeneral) => switch (typeGeneral) {
-        'Dataset' => Icons.storage_outlined,
-        'JournalArticle' => Icons.article_outlined,
-        'Software' => Icons.terminal_outlined,
-        'Preprint' => Icons.description_outlined,
-        'PhysicalObject' => Icons.science_outlined,
-        _ => Icons.category_outlined,
-      };
+    'Dataset' => petrol,
+    'JournalArticle' => oceanBlue,
+    'Software' => const Color(0xFF7C5CBF),
+    'Preprint' => amber,
+    'PhysicalObject' => const Color(0xFF5B8C5A),
+    _ => const Color(0xFF607D8B),
+  };
 
   /// Цвет «бейджа» состояния метаданных.
   static Color stateBadge(String? state) => switch (state) {
-        'findable' => const Color(0xFF2E7D32),
-        'registered' => oceanBlue,
-        'draft' => amber,
-        _ => const Color(0xFF607D8B),
-      };
+    'findable' => const Color(0xFF2E7D32),
+    'registered' => oceanBlue,
+    'draft' => amber,
+    _ => const Color(0xFF607D8B),
+  };
 }

@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../common/navigation/app_router.dart';
 import '../../../../common/widgets/app_scaffold.dart';
+import '../../../../common/widgets/app_settings_actions.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../domain/doi_record.dart';
 import '../bloc/list/doi_list_cubit.dart';
 import '../bloc/list/doi_list_state.dart';
@@ -17,7 +20,15 @@ class DoiListScreen extends StatefulWidget {
 }
 
 class _DoiListScreenState extends State<DoiListScreen> {
-  final _searchController = TextEditingController();
+  late final TextEditingController _searchController;
+
+  @override
+  void initState() {
+    super.initState();
+    _searchController = TextEditingController(
+      text: context.read<DoiListCubit>().state.query,
+    );
+  }
 
   @override
   void dispose() {
@@ -27,14 +38,17 @@ class _DoiListScreenState extends State<DoiListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return AppScaffold(
       appBar: AppBar(
-        title: const Text('Каталог DOI'),
+        title: Text(l10n.catalogTitle),
         actions: [
+          const ThemeAction(),
+          const LanguageAction(),
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: () => context.read<DoiListCubit>().load(),
-            tooltip: 'Обновить',
+            tooltip: l10n.refresh,
           ),
         ],
       ),
@@ -47,7 +61,7 @@ class _DoiListScreenState extends State<DoiListScreen> {
               onChanged: context.read<DoiListCubit>().search,
               textInputAction: TextInputAction.search,
               decoration: InputDecoration(
-                hintText: 'Поиск по названию…',
+                hintText: l10n.searchHint,
                 prefixIcon: const Icon(Icons.search),
                 suffixIcon: ListenableBuilder(
                   listenable: _searchController,
@@ -57,9 +71,10 @@ class _DoiListScreenState extends State<DoiListScreen> {
                     }
                     return IconButton(
                       icon: const Icon(Icons.close),
+                      tooltip: l10n.clearSearch,
                       onPressed: () {
                         _searchController.clear();
-                        context.read<DoiListCubit>().resetSearch();
+                        context.read<DoiListCubit>().search('');
                       },
                     );
                   },
@@ -75,19 +90,23 @@ class _DoiListScreenState extends State<DoiListScreen> {
           ),
           Expanded(
             child: BlocBuilder<DoiListCubit, DoiListState>(
-              builder: (context, state) => switch (state.status) {
-                DoiListStatus.initial ||
-                DoiListStatus.loading =>
-                  const _LoadingView(),
-                DoiListStatus.error => _ErrorView(
-                    message: state.error ?? 'Не удалось загрузить каталог',
-                    onRetry: () => context.read<DoiListCubit>().load(),
+              builder: (context, state) => switch (state) {
+                DoiListLoading() => const _LoadingView(),
+                DoiListError() => _ErrorView(
+                  message: l10n.catalogLoadError,
+                  onRetry: context.read<DoiListCubit>().load,
+                ),
+                DoiListLoaded(
+                  :final records,
+                  :final totalCount,
+                  :final query,
+                ) =>
+                  _ListView(
+                    records: records,
+                    totalCount: totalCount,
+                    query: query,
                   ),
-                DoiListStatus.loaded => _ListView(
-                    records: state.visible,
-                    totalCount: state.records.length,
-                    query: state.query,
-                  ),
+                DoiListNotFound(:final query) => _EmptyView(query: query),
               },
             ),
           ),
@@ -110,13 +129,12 @@ class _ListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (records.isEmpty) {
-      return _EmptyView(query: query);
-    }
+    final l10n = AppLocalizations.of(context);
 
     return RefreshIndicator(
       onRefresh: () => context.read<DoiListCubit>().load(),
       child: CustomScrollView(
+        key: const PageStorageKey<String>('doi-list'),
         physics: const AlwaysScrollableScrollPhysics(),
         slivers: [
           SliverToBoxAdapter(
@@ -124,11 +142,11 @@ class _ListView extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
               child: Text(
                 query.isEmpty
-                    ? 'Записей в каталоге: $totalCount'
-                    : 'Найдено: ${records.length} из $totalCount',
+                    ? l10n.catalogCount(totalCount)
+                    : l10n.searchCount(records.length, totalCount),
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context).colorScheme.outline,
-                    ),
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
               ),
             ),
           ),
@@ -141,7 +159,7 @@ class _ListView extends StatelessWidget {
                 final record = records[index];
                 return DoiCard(
                   record: record,
-                  onTap: () => context.push(record.routePath),
+                  onTap: () => context.push(AppRoutes.detail(record.doi)),
                 );
               },
             ),
@@ -179,7 +197,10 @@ class _ErrorView extends StatelessWidget {
             const SizedBox(height: 12),
             Text(message, textAlign: TextAlign.center),
             const SizedBox(height: 16),
-            FilledButton.tonal(onPressed: onRetry, child: const Text('Повторить')),
+            FilledButton.tonal(
+              onPressed: onRetry,
+              child: Text(AppLocalizations.of(context).retry),
+            ),
           ],
         ),
       ),
@@ -194,6 +215,8 @@ class _EmptyView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final isCatalogEmpty = query.trim().isEmpty;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -203,17 +226,18 @@ class _EmptyView extends StatelessWidget {
             const Icon(Icons.search_off, size: 48),
             const SizedBox(height: 12),
             Text(
-              'По запросу «$query» ничего не найдено',
+              isCatalogEmpty ? l10n.emptyCatalog : l10n.noSearchResults(query),
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.titleSmall,
             ),
             const SizedBox(height: 4),
-            Text(
-              'Попробуйте другое название или DOI',
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.outline,
-                  ),
-            ),
+            if (!isCatalogEmpty)
+              Text(
+                l10n.tryAnotherQuery,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+              ),
           ],
         ),
       ),

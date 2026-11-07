@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../../../../common/theme/app_colors.dart';
 import '../../../../../common/widgets/label_chip.dart';
+import '../../../../../common/theme/image_sources.dart';
+import '../../../../../l10n/app_localizations.dart';
 import '../../../domain/doi_record.dart';
 
 /// Чип крупной категории ресурса: Dataset / JournalArticle / Software…
@@ -13,11 +15,11 @@ class ResourceTypeChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final type = record.resourceTypeGeneral ?? 'Other';
+    final type = record.resourceTypeGeneral;
     return LabelChip(
-      label: type,
+      label: type ?? AppLocalizations.of(context).otherType,
       color: AppColors.resourceType(type),
-      icon: icon ? AppColors.resourceTypeIcon(type) : null,
+      icon: icon ? ImageSources.doiPlaceholder(type) : null,
     );
   }
 }

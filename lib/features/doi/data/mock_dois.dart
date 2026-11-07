@@ -1,7 +1,7 @@
 /// Мок-каталог DOI в формате JSON:API — ровно как отдаёт
 /// `GET https://api.datacite.org/dois` (обёртка `data`, поля в `attributes`).
 ///
-/// Репозиторий прогоняет эти map'ы через `DoiRecord.listFromJsonApi`, так что
+/// Репозиторий прогоняет эти map'ы через `DoiRecordMapper.listFromJsonApi`, так что
 /// моки проверяют маппер так же, как реальный ответ API. Часть записей
 /// нарочно неполная (без описания, без авторов, publisher объектом) —
 /// API так и отвечает на «молодые» записи.
@@ -13,7 +13,7 @@
 library;
 
 const Map<String, dynamic> kDoiCatalogJsonApi = {
-  'meta': {'total': 10, 'page': 1, 'pageSize': 25},
+  'meta': {'total': 20, 'page': 1, 'pageSize': 25},
   'data': [
     // 1. Крупный датасет — хаб, с которого расходится граф связей.
     {
@@ -652,6 +652,209 @@ const Map<String, dynamic> kDoiCatalogJsonApi = {
         'referenceCount': 7,
         'created': '2021-12-14T00:00:00.000Z',
         'updated': '2022-02-08T00:00:00.000Z',
+      },
+    },
+
+    // Дополнительные синтетические записи для ЛР2.
+    {
+      'id': '10.9999/tundra-carbon-flux',
+      'type': 'dois',
+      'attributes': {
+        'titles': [{'title': 'Tundra carbon flux measurements in western Siberia'}],
+        'creators': [{'name': 'Lebedeva, Nina'}],
+        'publisher': 'Western Siberian Field Archive',
+        'publicationYear': 2022,
+        'types': {'resourceTypeGeneral': 'Dataset'},
+        'subjects': [{'subject': 'carbon flux'}],
+        'descriptions': [
+          {'descriptionType': 'Abstract', 'description': 'Eddy covariance measurements from three peatland stations.'},
+        ],
+        'language': 'en',
+        'state': 'findable',
+        'citationCount': 2,
+      },
+    },
+    {
+      'id': '10.9999/alpine-snow-depth',
+      'type': 'dois',
+      'attributes': {
+        'titles': [{'title': 'Alpine snow depth transects in the Ötztal Alps'}],
+        'creators': [{'name': 'Weber, Anna'}],
+        'publisher': 'Alpine Research Archive',
+        'publicationYear': 2023,
+        'types': {'resourceTypeGeneral': 'Dataset'},
+        'subjects': [{'subject': 'snow depth'}],
+        'descriptions': [
+          {'descriptionType': 'Abstract', 'description': 'Repeated snow depth surveys along elevation gradients.'},
+        ],
+        'language': 'en',
+        'state': 'findable',
+        'citationCount': 5,
+      },
+    },
+    {
+      'id': '10.9999/river-microplastics',
+      'type': 'dois',
+      'attributes': {
+        'titles': [{'title': 'Microplastic concentrations in the lower Danube'}],
+        'creators': [{'name': 'Ionescu, Elena'}],
+        'publisher': 'Danube Water Observatory',
+        'publicationYear': 2024,
+        'types': {'resourceTypeGeneral': 'Dataset'},
+        'subjects': [{'subject': 'microplastics'}],
+        'descriptions': [
+          {'descriptionType': 'Abstract', 'description': 'Polymer counts and size classes from river water samples.'},
+        ],
+        'language': 'en',
+        'state': 'findable',
+        'citationCount': 8,
+      },
+    },
+    {
+      'id': '10.9999/forest-canopy-tools',
+      'type': 'dois',
+      'attributes': {
+        'titles': [{'title': 'Forest Canopy Metrics Toolkit'}],
+        'creators': [{'name': 'Silva, Rafael'}],
+        'publisher': 'Open Forest Lab',
+        'publicationYear': 2025,
+        'types': {'resourceTypeGeneral': 'Software'},
+        'subjects': [{'subject': 'lidar'}],
+        'descriptions': [
+          {'descriptionType': 'Abstract', 'description': 'Scripts for calculating canopy height and gap fraction from lidar.'},
+        ],
+        'language': 'en',
+        'state': 'findable',
+        'citationCount': 11,
+        'relatedIdentifiers': [
+          {
+            'relatedIdentifier': '10.9999/alpine-snow-depth',
+            'relatedIdentifierType': 'DOI',
+            'relationType': 'References',
+          },
+        ],
+      },
+    },
+    {
+      'id': '10.9999/urban-heat-islands',
+      'type': 'dois',
+      'attributes': {
+        'titles': [{'title': 'Nighttime heat islands across Central European cities'}],
+        'creators': [{'name': 'Novak, Petra'}],
+        'publisher': 'Urban Climate Archive',
+        'publicationYear': 2022,
+        'types': {'resourceTypeGeneral': 'Preprint'},
+        'subjects': [{'subject': 'urban climate'}],
+        'descriptions': [
+          {'descriptionType': 'Abstract', 'description': 'A comparison of surface temperature anomalies derived from thermal imagery.'},
+        ],
+        'language': 'en',
+        'state': 'findable',
+        'citationCount': 14,
+      },
+    },
+    {
+      'id': '10.9999/wetland-bird-audio',
+      'type': 'dois',
+      'attributes': {
+        'titles': [{'title': 'Acoustic surveys of wetland birds in the Mekong Delta'}],
+        'creators': [{'name': 'Nguyen, Linh'}],
+        'publisher': 'Wetland Monitoring Network',
+        'publicationYear': 2023,
+        'types': {'resourceTypeGeneral': 'Dataset'},
+        'subjects': [{'subject': 'bioacoustics'}],
+        'descriptions': [
+          {'descriptionType': 'Abstract', 'description': 'Dawn recordings and species annotations from seasonal surveys.'},
+        ],
+        'language': 'en',
+        'state': 'findable',
+        'citationCount': 17,
+      },
+    },
+    {
+      'id': '10.9999/soil-isotope-samples',
+      'type': 'dois',
+      'attributes': {
+        'titles': [{'title': 'Stable isotope reference soils from the Central Andes'}],
+        'creators': [{'name': 'Rojas, Camila'}],
+        'publisher': 'Andean Soil Collection',
+        'publicationYear': 2024,
+        'types': {'resourceTypeGeneral': 'PhysicalObject'},
+        'subjects': [{'subject': 'stable isotopes'}],
+        'descriptions': [
+          {'descriptionType': 'Abstract', 'description': 'Archived soil aliquots with carbon and nitrogen isotope measurements.'},
+        ],
+        'language': 'en',
+        'state': 'findable',
+        'citationCount': 20,
+      },
+    },
+    {
+      'id': '10.9999/lake-ice-phenology',
+      'type': 'dois',
+      'attributes': {
+        'titles': [{'title': 'Satellite observations of lake ice breakup in Finland'}],
+        'creators': [{'name': 'Korhonen, Aino'}],
+        'publisher': 'Nordic Cryosphere Archive',
+        'publicationYear': 2025,
+        'types': {'resourceTypeGeneral': 'Dataset'},
+        'subjects': [{'subject': 'lake ice'}],
+        'descriptions': [
+          {'descriptionType': 'Abstract', 'description': 'Annual freeze and breakup dates extracted from optical imagery.'},
+        ],
+        'language': 'en',
+        'state': 'findable',
+        'citationCount': 23,
+      },
+    },
+    {
+      'id': '10.9999/pollinator-visits',
+      'type': 'dois',
+      'attributes': {
+        'titles': [{'title': 'Pollinator visitation records from Mediterranean orchards'}],
+        'creators': [{'name': 'Martín, Lucía'}],
+        'publisher': 'Agroecology Data Centre',
+        'publicationYear': 2022,
+        'types': {'resourceTypeGeneral': 'Dataset'},
+        'subjects': [{'subject': 'pollination'}],
+        'descriptions': [
+          {'descriptionType': 'Abstract', 'description': 'Timed field observations across managed and unmanaged plots.'},
+        ],
+        'language': 'en',
+        'state': 'findable',
+        'citationCount': 26,
+        'relatedIdentifiers': [
+          {
+            'relatedIdentifier': '10.9999/wetland-bird-audio',
+            'relatedIdentifierType': 'DOI',
+            'relationType': 'References',
+          },
+        ],
+      },
+    },
+    {
+      'id': '10.9999/coastal-erosion',
+      'type': 'dois',
+      'attributes': {
+        'titles': [{'title': 'Storm-driven erosion on the Atlantic coast of Portugal'}],
+        'creators': [{'name': 'Pereira, João'}],
+        'publisher': 'Coastal Processes Journal',
+        'publicationYear': 2023,
+        'types': {'resourceTypeGeneral': 'JournalArticle'},
+        'subjects': [{'subject': 'coastal erosion'}],
+        'descriptions': [
+          {'descriptionType': 'Abstract', 'description': 'An analysis of shoreline retreat measured before and after winter storms.'},
+        ],
+        'language': 'en',
+        'state': 'findable',
+        'citationCount': 29,
+        'relatedIdentifiers': [
+          {
+            'relatedIdentifier': '10.82152/sst-global-1980-2023',
+            'relatedIdentifierType': 'DOI',
+            'relationType': 'References',
+          },
+        ],
       },
     },
   ],

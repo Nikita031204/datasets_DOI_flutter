@@ -6,8 +6,9 @@ import 'package:doi_catalog/features/doi/data/doi_repository.dart';
 import 'package:doi_catalog/features/doi/presentation/view/doi_list_screen.dart';
 
 void main() {
-  testWidgets('список каталога загружается и ищется по названию',
-      (tester) async {
+  testWidgets('список каталога загружается и ищется по названию', (
+    tester,
+  ) async {
     await tester.pumpWidget(const DoiCatalogApp());
 
     // Первый кадр — состояние загрузки.
@@ -18,32 +19,29 @@ void main() {
 
     // Заголовок каталога и счётчик записей на месте.
     expect(find.text('Каталог DOI'), findsOneWidget);
-    expect(find.text('Записей в каталоге: 10'), findsOneWidget);
+    expect(find.text('Записей в каталоге: 20'), findsOneWidget);
 
     // Ищем по слову из названия.
     await tester.enterText(find.byType(TextField), 'zooplankton');
     await tester.pump();
 
-    expect(find.text('Найдено: 1 из 10'), findsOneWidget);
-    expect(
-      find.textContaining('Baltic Sea zooplankton'),
-      findsOneWidget,
-    );
+    expect(find.text('Найдено: 1 из 20'), findsOneWidget);
+    expect(find.textContaining('Baltic Sea zooplankton'), findsOneWidget);
   });
 
-  test('репозиторий ищет по DOI и падает по неизвестному', () async {
+  test('репозиторий возвращает запись по DOI или null', () async {
     final repo = DoiRepository();
 
-    expect(await repo.containsDoi('10.1029/2023gl107894'), isTrue);
-    expect(await repo.containsDoi('10.9999/does-not-exist'), isFalse);
-    await expectLater(
-      repo.getByDoi('10.9999/does-not-exist'),
-      throwsA(isA<DoiNotFoundException>()),
+    expect(
+      (await repo.getByDoi('10.1029/2023gl107894'))?.doi,
+      '10.1029/2023gl107894',
     );
+    expect(await repo.getByDoi('10.9999/does-not-exist'), isNull);
   });
 
-  testWidgets('тап по relatedIdentifier открывает карточку связанной записи',
-      (tester) async {
+  testWidgets('тап по relatedIdentifier открывает карточку связанной записи', (
+    tester,
+  ) async {
     // Высокий вьюпорт: страница деталей целиком в кадре, секция связей
     // доступна без прокрутки (scrollUntilVisible доводит лишь до кэша
     // ListView, элемент может остаться за нижним краем).
@@ -62,9 +60,6 @@ void main() {
     // Тап по связи ведёт на экран статьи.
     await tester.tap(find.text('10.1234/ncomms.2024.1987'));
     await tester.pumpAndSettle();
-    expect(
-      find.textContaining('Accelerated warming shifts'),
-      findsOneWidget,
-    );
+    expect(find.textContaining('Accelerated warming shifts'), findsOneWidget);
   });
 }

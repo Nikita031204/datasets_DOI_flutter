@@ -15,6 +15,7 @@ class LabelChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final foreground = Theme.of(context).colorScheme.onSurface;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
@@ -25,7 +26,7 @@ class LabelChip extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           if (icon != null) ...[
-            Icon(icon, size: 13, color: color),
+            Icon(icon, size: 13, color: foreground),
             const SizedBox(width: 4),
           ],
           Text(
@@ -33,7 +34,7 @@ class LabelChip extends StatelessWidget {
             style: TextStyle(
               fontSize: 11.5,
               fontWeight: FontWeight.w700,
-              color: color,
+              color: foreground,
             ),
           ),
         ],
