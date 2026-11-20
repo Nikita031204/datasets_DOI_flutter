@@ -1,0 +1,152 @@
+{
+  "@@locale": "en",
+  "catalogTitle": "DOI catalog",
+  "refresh": "Refresh",
+  "searchHint": "Search by title or DOI…",
+  "clearSearch": "Clear search",
+  "catalogCount": "Catalog records: {count}",
+  "@catalogCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "searchCount": "Found: {count} of {total}",
+  "@searchCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "catalogLoadError": "Could not load the catalog",
+  "detailLoadError": "Could not load the record",
+  "retry": "Retry",
+  "noSearchResults": "No results for “{query}”",
+  "@noSearchResults": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "emptyCatalog": "The catalog is empty",
+  "tryAnotherQuery": "Try a different title or DOI",
+  "copyDoi": "Copy DOI",
+  "doiCopied": "DOI copied: {doi}",
+  "@doiCopied": {
+    "placeholders": {
+      "doi": {
+        "type": "String"
+      }
+    }
+  },
+  "metadataState": "Status: {state}",
+  "@metadataState": {
+    "placeholders": {
+      "state": {
+        "type": "String"
+      }
+    }
+  },
+  "versionLabel": "Version {version}",
+  "@versionLabel": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "doiLabel": "DOI",
+  "publisher": "Publisher",
+  "publicationYear": "Publication year",
+  "authors": "Authors",
+  "unknownAuthor": "Author not listed",
+  "recordLanguage": "Language",
+  "publication": "Publication",
+  "volumeLabel": "vol. {volume}",
+  "@volumeLabel": {
+    "placeholders": {
+      "volume": {
+        "type": "String"
+      }
+    }
+  },
+  "issueLabel": "no. {issue}",
+  "@issueLabel": {
+    "placeholders": {
+      "issue": {
+        "type": "String"
+      }
+    }
+  },
+  "size": "Size",
+  "formats": "Formats",
+  "urlLabel": "URL",
+  "citationCount": "citations: {count}",
+  "@citationCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "citations": "Citations",
+  "views": "Views",
+  "downloads": "Downloads",
+  "abstractTitle": "Abstract",
+  "people": "People",
+  "subjects": "Subjects",
+  "notes": "Notes",
+  "licenses": "Licenses",
+  "dates": "Dates",
+  "dateLabel": "Date",
+  "registered": "Registered",
+  "updated": "Updated",
+  "relatedRecords": "Related records ({count})",
+  "@relatedRecords": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "externalResource": "Type: {type} (external resource)",
+  "@externalResource": {
+    "placeholders": {
+      "type": {
+        "type": "String"
+      }
+    }
+  },
+  "missingRecord": "Record not found in the catalog",
+  "backToCatalog": "Back to catalog",
+  "pageNotFound": "Page not found",
+  "otherType": "Other",
+  "useLightTheme": "Switch to light theme",
+  "useDarkTheme": "Switch to dark theme",
+  "chooseLanguage": "Choose language",
+  "russian": "Russian",
+  "english": "English",
+  "relationReferences": "References",
+  "relationIsReferencedBy": "Is referenced by",
+  "relationCites": "Cites",
+  "relationIsCitedBy": "Is cited by",
+  "relationIsSupplementTo": "Supplements",
+  "relationIsSupplementedBy": "Is supplemented by",
+  "relationIsDerivedFrom": "Is derived from",
+  "relationIsSourceOf": "Is source of",
+  "relationHasPart": "Contains",
+  "relationIsPartOf": "Is part of",
+  "relationIsVariantFormOf": "Is a variant of",
+  "relationIsIdenticalTo": "Is identical to",
+  "relationRequires": "Requires",
+  "relationIsRequiredBy": "Is required by",
+  "relationCompiles": "Compiles",
+  "relationIsCompiledBy": "Is compiled by",
+  "relationDefault": "Is related to"
+}
